@@ -7,7 +7,9 @@ let workingDir = process.cwd();
  *
  * This gives us all the options and switches for "free."
  *
- * Provides command based usage, similar to Jest or Git
+ * Provides command based usage, similar to Jest or Git.
+ *
+ * Notes: While it's a bit overkill for features as defined, Commander really shines with more sophisticated command line applications. Adding commands and subcommands is extremely easy and easy to read. (If you want examples of this expanded out, feel free to ask.)
  */
  const program = new Command();
 
@@ -23,6 +25,11 @@ let workingDir = process.cwd();
   * Commands
   **************/
 
+ /**
+  * Program entrypoint
+  *
+  * Should allow for `cat file.csv | node app` and `node app file.csv` input.
+  */
  program
     .argument('[file]', 'data to process')
     .action((file) => {
@@ -31,5 +38,7 @@ let workingDir = process.cwd();
         console.log(file);
     });
 
-
+/**
+ *
+ */
 program.parse(process.argv || process.stdin);
