@@ -1,4 +1,4 @@
-import Output from 'Src/Output.js';
+const Output = require('Src/Output.js');
 
 describe('Output', () => {
     it.todo('Outputs invalid address response');

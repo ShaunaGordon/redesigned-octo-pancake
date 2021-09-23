@@ -1,6 +1,8 @@
-import { Command } from 'commander';
+/**
+ * Notes: Node uses an entry file to get into its applications. The exact form the entry file takes depends a lot on the application, but I like using it as a sort of controller in console programs, especially when using a library to manage the commands ("don't test code you don't own"). It also helps me avoid putting too much logic code where it doesn't belong, to keep the code clean and readable.
+ */
 
-let workingDir = process.cwd();
+import { Command } from 'commander';
 
 /**
  * Use Commander.js to create the app's commands and triggers.
@@ -39,6 +41,6 @@ let workingDir = process.cwd();
     });
 
 /**
- *
+ * Tell Commander to respond to input.
  */
 program.parse(process.argv || process.stdin);
