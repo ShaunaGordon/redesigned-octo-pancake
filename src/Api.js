@@ -25,7 +25,7 @@ const Api = {
             'method': 'POST',
             'body': input
         }).then((result) => {
-            return result.text();
+            return result.text().then((text) => JSON.parse(text));
         });
     },
 };

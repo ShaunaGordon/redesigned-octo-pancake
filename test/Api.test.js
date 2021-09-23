@@ -39,7 +39,7 @@ describe('Api', () => {
 
         fetch.mockReturnValue(Promise.resolve(new Response(responseString)));
 
-        const actual = JSON.parse(await api.send(data));
+        const actual = await api.send(data);
 
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenCalledWith('https://api.address-validator.net/api/verify', {
