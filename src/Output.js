@@ -5,15 +5,17 @@
 const connector = '->';
 
 const outputToTerminal = (data) => {
-
+    console.log(data);
 };
 
 const Output = {
-    'formatInvalid': (data) => {
-        // address -> Invalid Address
+    'invalid': (data) => {
+        let address = Object.values(data).join(', ');
+
+        outputToTerminal(`${address} ${connector} Invalid Address`);
     },
 
-    'formatValid': (data) => {
+    'valid': (data) => {
         // address -> suggestion
     }
 };
