@@ -6,13 +6,12 @@
 
 const fetch = require('node-fetch');
 
-// Move to .env?
 const baseUrl = 'https://api.address-validator.net';
 
 const Api = {
     'send': (data) => {
         let input = {
-            'APIKey': '',
+            'APIKey': process.env.ADDRESS_KEY,
             'StreetAddress': data.street,
             'City': data.city,
             'State': data.province,

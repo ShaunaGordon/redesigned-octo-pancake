@@ -10,13 +10,16 @@ const outputToTerminal = (data) => {
 
 const Output = {
     'invalid': (data) => {
-        let address = Object.values(data).join(', ');
+        let address = Object.values(data.original).join(', ');
 
         outputToTerminal(`${address} ${connector} Invalid Address`);
     },
 
     'valid': (data) => {
-        // address -> suggestion
+        let original = Object.values(data.original).join(', ');
+        let corrected = Object.values(data.corrected).join(', ');
+
+        outputToTerminal(`${original} ${connector} ${corrected}`);
     }
 };
 

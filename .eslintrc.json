@@ -14,7 +14,10 @@
         "expect": "readonly",
         "jest": "readonly",
         "require": "readonly",
-        "module": true
+        "beforeEach": true,
+        "afterEach": true,
+        "module": true,
+        "process": true
     },
     "rules": {
         "indent": [

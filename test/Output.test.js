@@ -3,15 +3,21 @@ const Output = require('Src/Output.js');
 const log = jest.spyOn(console, 'log').mockImplementation(() => {});
 
 describe('Output', () => {
+    afterEach(() => {
+        log.mockReset();
+    });
+
     it('Outputs invalid address response', () => {
         const data = {
-            'street': '123 E Main St',
-            'city': 'Anywhere',
-            'province': 'OK',
-            'postalCode': '1234'
+            'original': {
+                'street': '123 E Main St',
+                'city': 'Anywhere',
+                'province': 'OK',
+                'postalCode': '12345'
+            }
         };
 
-        const expected = '123 E Main St, Anywhere, OK, 1234 -> Invalid Address';
+        const expected = '123 E Main St, Anywhere, OK, 12345 -> Invalid Address';
 
         Output.invalid(data);
 
@@ -19,7 +25,27 @@ describe('Output', () => {
         expect(log).toHaveBeenCalledWith(expected);
     });
 
-    it.todo('Outputs valid address response');
+    it('Outputs valid address response', () => {
+        const data = {
+            'original': {
+                'street': '123 E Main St',
+                'city': 'Anywhere',
+                'province': 'OK',
+                'postalCode': '12345'
+            },
+            'corrected': {
+                'street': '123 E Main St.',
+                'city': 'Anywhere',
+                'province': 'OK',
+                'postalCode': '12345-6789'
+            }
+        };
 
-    it.todo('Outputs a suggestion for suspect responses');
+        const expected = '123 E Main St, Anywhere, OK, 12345 -> 123 E Main St., Anywhere, OK, 12345-6789';
+
+        Output.valid(data);
+
+        expect(log).toHaveBeenCalledTimes(1);
+        expect(log).toHaveBeenCalledWith(expected);
+    });
 });

@@ -22,7 +22,6 @@ describe('Api', () => {
         const data = {
             'street': '',
             'city': '',
-            'province': '',
             'postalCode': '',
             'country': ''
         };
@@ -31,7 +30,6 @@ describe('Api', () => {
             'APIKey': '',
             'StreetAddress': data.street,
             'City': data.city,
-            'State': data.province,
             'PostalCode': data.postalCode,
             'CountryCode': data.country,
         };
