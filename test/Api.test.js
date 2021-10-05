@@ -27,7 +27,6 @@ describe('Api', () => {
         };
 
         const expectedBody = {
-            'APIKey': '',
             'StreetAddress': data.street,
             'City': data.city,
             'PostalCode': data.postalCode,
@@ -45,6 +44,6 @@ describe('Api', () => {
             'body': expectedBody
         });
 
-        expect(actual).toStrictEqual(expectedResult);
+        expect(actual).toEqual(expect.objectContaining(expectedResult));
     });
 });

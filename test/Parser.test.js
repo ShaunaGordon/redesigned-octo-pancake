@@ -1,11 +1,24 @@
 const Parser = require('../src/Parser.js');
+const {Buffer} = require('buffer');
+const stream = require('stream');
 
-describe('Parser', () => {
+let data;
+
+describe('Parser.parse', () => {
+    beforeAll(() => {
+        // Backticked strings preserve all whitespace, so this need outdented to be correct.
+        let input =
+`Street Address, City, Postal Code
+123 e Maine Street, Columbus, 43215
+1 Empora St, Title, 11111
+`;
+
+        data = stream.Readable();
+        data.push(input);
+        data.push(null);
+    });
+
     it('Parses Stream input into objects', async () => {
-        let data = `Street Address, City, Postal Code
-        123 e Maine Street, Columbus, 43215
-        1 Empora St, Title, 11111`;
-
         let columns = [
             'street',
             'city',
@@ -25,16 +38,13 @@ describe('Parser', () => {
             }
         ];
 
-        let actual = await Parser.parse(data, columns);
-
-        expect(actual).toStrictEqual(expected);
+        Parser.parse(data, columns)
+            .then((actual) => {
+                expect(actual).toStrictEqual(expected);
+            });
     });
 
-    it('Uses implicit columns if no columns are supplied', async () => {
-        let data = `Street Address, City, Postal Code
-        123 e Maine Street, Columbus, 43215
-        1 Empora St, Title, 11111`;
-
+    it('Uses implicit columns if none are supplied', async () => {
         let expected = [
             {
                 'Street Address': '123 e Maine Street',
@@ -48,8 +58,43 @@ describe('Parser', () => {
             }
         ];
 
-        let actual = await Parser.parse(data);
+        Parser.parse(data)
+            .then((actual) => {
+                expect(actual).toStrictEqual(expected);
+            });
+    });
+});
 
-        expect(actual).toStrictEqual(expected);
+describe('Parser.read', () => {
+    it('Returns a Stream', () => {
+        let filename = 'test/input.csv';
+        let actual = Parser.read(filename);
+
+        expect(actual).toBeTruthy();
+        // JS doesn't have typing beyond primitives, so we'll do a little manual duck-typing
+        // Quack, quack
+        expect(actual.read).not.toBeUndefined();
+    });
+
+    it('Reads the file data into the Stream', async () => {
+        // Backticked strings preserve all whitespace, so this need outdented to be correct.
+        let expected =
+`Street Address, City, Postal Code
+123 e Maine Street, Columbus, 43215
+1 Empora St, Title, 11111
+`;
+
+        let filename = 'test/input.csv';
+        let response = Parser.read(filename);
+        let chunks = [];
+
+        for await (let chunk of response) {
+            chunks.push(chunk);
+        }
+
+        const buffer = Buffer.concat(chunks);
+        const actual = buffer.toString('utf-8');
+
+        expect(actual).toBe(expected);
     });
 });

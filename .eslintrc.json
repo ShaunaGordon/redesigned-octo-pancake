@@ -16,6 +16,7 @@
         "require": "readonly",
         "beforeEach": true,
         "afterEach": true,
+        "beforeAll": true,
         "module": true,
         "process": true
     },
