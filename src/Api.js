@@ -7,9 +7,18 @@
 const fetch = require('node-fetch');
 
 const baseUrl = 'https://api.address-validator.net';
+const endpoints = {
+    'verify': '/api/verify'
+};
 
 const Api = {
-    'send': (data) => {
+    /**
+     * Send data for a single item to the API.
+     *
+     * @param {object} data
+     * @returns
+     */
+    'sendItem': (data) => {
         let input = {
             'APIKey': process.env.ADDRESS_KEY,
             'StreetAddress': data.street,
@@ -19,14 +28,31 @@ const Api = {
             'CountryCode': data.country,
         };
 
-        let endpoint = `${baseUrl}/api/verify`;
+        let endpoint = `${baseUrl}${endpoints.verify}`;
         return fetch(endpoint, {
             'method': 'POST',
             'body': input
         }).then((result) => {
-            return result.text().then((text) => JSON.parse(text));
+            return result.clone();
+        }).catch((err) => {
+            console.log(err);
         });
     },
+
+    /**
+     * Send data for a set of items to the API.
+     *
+     * Notes: The rest of the application shouldn't really care about how this sends the data, just *that* it sends it. So, we'll standardize on using an array, so that if/when we have a bulk option, it can be handled internally.
+     *
+     * @param {array} data
+     */
+    'send': async (data) => {
+        let response = await Promise.all(data.map(item => Api.sendItem(item)));
+
+        let results = await Promise.all((response).map(result => result.json()));
+
+        return results;
+    }
 };
 
 module.exports = Api;
