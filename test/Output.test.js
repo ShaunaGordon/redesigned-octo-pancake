@@ -7,7 +7,64 @@ describe('Output', () => {
         log.mockReset();
     });
 
-    it('Outputs invalid address response', () => {
+    it('Outputs the message response to terminal', () => {
+        const data = [{
+            'status': 'INVALID',
+            'original': {
+                'street': '123 E Main St',
+                'city': 'Anywhere',
+                'province': 'OK',
+                'postalCode': '12345'
+            }
+        }];
+
+        const expected = '123 E Main St, Anywhere, OK, 12345 -> Invalid Address';
+
+        Output.toTerminal(data);
+
+        expect(log).toHaveBeenCalledTimes(1);
+        expect(log).toHaveBeenCalledWith(expected);
+    });
+
+    it('Outputs multiple message responses to terminal', () => {
+        const data = [{
+            'status': 'INVALID',
+            'original': {
+                'street': '123 E Main St',
+                'city': 'Anywhere',
+                'province': 'OK',
+                'postalCode': '12345'
+            }
+        },
+        {
+            'status': 'VALID',
+            'original': {
+                'street': '345 E Main St',
+                'city': 'Anywhere',
+                'province': 'OK',
+                'postalCode': '12345'
+            },
+            'corrected': {
+                'street': '345 E Main St.',
+                'city': 'Anywhere',
+                'province': 'OK',
+                'postalCode': '12345-6789'
+            }
+        }];
+
+        const expected = [
+            '123 E Main St, Anywhere, OK, 12345 -> Invalid Address',
+            '345 E Main St, Anywhere, OK, 12345 -> 345 E Main St., Anywhere, OK, 12345-6789'
+        ];
+
+        Output.toTerminal(data);
+
+        expect(log).toHaveBeenCalledTimes(2);
+        expect(log).toHaveBeenCalledWith(expected[0]);
+        expect(log).toHaveBeenCalledWith(expected[1]);
+    });
+
+    it('Returns invalid address message', () => {
         const data = {
             'original': {
                 'street': '123 E Main St',
@@ -19,13 +76,12 @@ describe('Output', () => {
 
         const expected = '123 E Main St, Anywhere, OK, 12345 -> Invalid Address';
 
-        Output.invalid(data);
+        let actual = Output.invalid(data);
 
-        expect(log).toHaveBeenCalledTimes(1);
-        expect(log).toHaveBeenCalledWith(expected);
+        expect(actual).toBe(expected);
     });
 
-    it('Outputs valid address response', () => {
+    it('Returns valid address message', () => {
         const data = {
             'original': {
                 'street': '123 E Main St',
@@ -43,9 +99,8 @@ describe('Output', () => {
 
         const expected = '123 E Main St, Anywhere, OK, 12345 -> 123 E Main St., Anywhere, OK, 12345-6789';
 
-        Output.valid(data);
+        let actual = Output.valid(data);
 
-        expect(log).toHaveBeenCalledTimes(1);
-        expect(log).toHaveBeenCalledWith(expected);
+        expect(actual).toBe(expected);
     });
 });

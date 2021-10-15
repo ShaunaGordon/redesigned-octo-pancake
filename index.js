@@ -9,6 +9,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const Parser = require('./src/Parser');
 const Api = require('./src/Api');
+const Output = require('./src/Output');
 
 /**
  * Use Commander.js to create the app's commands and triggers.
@@ -50,7 +51,14 @@ program
 
         Parser.parse(data)
             .then((addresses) => {
-                Api.send(addresses);
+                Api.send(addresses)
+                    .then((results) => {
+                        console.log(results);
+                        for(let result in results) {
+                            let status = result.status.toLowerCase();
+                            Output[status](result);
+                        }
+                    });
             });
     });
 

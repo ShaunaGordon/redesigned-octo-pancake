@@ -4,24 +4,32 @@
 
 const connector = '->';
 
-const outputToTerminal = (data) => {
-    console.log(data);
-};
-
 const Output = {
     /**
-     * Output "Invalid Address" messaging to terminal.
+     * Send the messaging to the terminal.
+     *
+     * @param {array} data
+     */
+    'toTerminal': (data) => {
+        data.forEach((item) => {
+            let status = item.status.toLowerCase();
+            let formatted = Output[status](item);
+            console.log(formatted);
+        });
+    },
+    /**
+     * Format the "Invalid Address" messaging.
      *
      * @param {object} data
      */
     'invalid': (data) => {
         let address = Object.values(data.original).join(', ');
 
-        outputToTerminal(`${address} ${connector} Invalid Address`);
+        return `${address} ${connector} Invalid Address`;
     },
 
     /**
-     * Output "Valid Address, Correction" messaging to terminal.
+     * Format the "Valid Address, Correction" messaging.
      *
      * @param {object} data
      */
@@ -29,7 +37,7 @@ const Output = {
         let original = Object.values(data.original).join(', ');
         let corrected = Object.values(data.corrected).join(', ');
 
-        outputToTerminal(`${original} ${connector} ${corrected}`);
+        return `${original} ${connector} ${corrected}`;
     }
 };
 

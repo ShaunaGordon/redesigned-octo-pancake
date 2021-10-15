@@ -6,6 +6,7 @@
 
 const fetch = require('node-fetch');
 
+const apiKey = process.env.ADDRESS_KEY;
 const baseUrl = 'https://api.address-validator.net';
 const endpoints = {
     'verify': '/api/verify'
@@ -20,7 +21,6 @@ const Api = {
      */
     'sendItem': (data) => {
         let input = {
-            'APIKey': process.env.ADDRESS_KEY,
             'StreetAddress': data.street,
             'City': data.city,
             'State': data.province,
@@ -28,14 +28,15 @@ const Api = {
             'CountryCode': data.country,
         };
 
-        let endpoint = `${baseUrl}${endpoints.verify}`;
+        let endpoint = `${baseUrl}${endpoints.verify}?APIKey=${apiKey}`;
+
         return fetch(endpoint, {
             'method': 'POST',
             'body': input
         }).then((result) => {
             return result.clone();
         }).catch((err) => {
-            console.log(err);
+            console.error(err);
         });
     },
 

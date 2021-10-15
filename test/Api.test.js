@@ -43,7 +43,7 @@ describe('Api', () => {
         const actual = await (await api.sendItem(data)).json();
 
         expect(fetch).toHaveBeenCalledTimes(1);
-        expect(fetch).toHaveBeenCalledWith('https://api.address-validator.net/api/verify', {
+        expect(fetch).toHaveBeenCalledWith('https://api.address-validator.net/api/verify?APIKey=undefined', {
             'method': 'POST',
             'body': expectedBody
         });
@@ -107,12 +107,12 @@ describe('Api', () => {
         const actual = await api.send(data);
 
         expect(fetch).toHaveBeenCalledTimes(2);
-        expect(fetch).toHaveBeenCalledWith('https://api.address-validator.net/api/verify', {
+        expect(fetch).toHaveBeenCalledWith('https://api.address-validator.net/api/verify?APIKey=undefined', {
             'method': 'POST',
             'body': expectedBody[0]
         });
 
-        expect(fetch).toHaveBeenCalledWith('https://api.address-validator.net/api/verify', {
+        expect(fetch).toHaveBeenCalledWith('https://api.address-validator.net/api/verify?APIKey=undefined', {
             'method': 'POST',
             'body': expectedBody[1]
         });
