@@ -52,25 +52,48 @@ describe('Api', () => {
     });
 
     it('Takes multiple addresses and gets results for all of them', async () => {
+        const expectedResponse = [
+            {
+                'status': 'VALID',
+                'street': '123 E Main St',
+                'city': 'Anywhere',
+                'postalcode': '43210-1234',
+            },
+            {
+                'status': 'VALID',
+                'street': '345 E Main St',
+                'city': 'Anywhere',
+                'postalcode': '43210-1234',
+            }
+        ];
+
         const expectedResult = [{
             'status': 'VALID',
-            'formattedaddress': '123 E Main St, Anywhere, OH, 43210-1234',
-            'street': '123 E Main St',
-            'postalcode': '43210-1234',
-            'city': 'Anywhere',
-            'state': 'OH',
-            'country': 'US',
-            'rdi': 'Residential'
+            'original': {
+                'street': '',
+                'city': '',
+                'postalCode': '',
+                'country': ''
+            },
+            'corrected': {
+                'street': '123 E Main St',
+                'city': 'Anywhere',
+                'postalCode': '43210-1234',
+            }
         },
         {
             'status': 'VALID',
-            'formattedaddress': '345 E Main St, Anywhere, OH, 43210-1234',
-            'street': '345 E Main St',
-            'postalcode': '43210-1234',
-            'city': 'Anywhere',
-            'state': 'OH',
-            'country': 'US',
-            'rdi': 'Residential'
+            'original': {
+                'street': '',
+                'city': '',
+                'postalCode': '',
+                'country': ''
+            },
+            'corrected': {
+                'street': '345 E Main St',
+                'city': 'Anywhere',
+                'postalCode': '43210-1234',
+            }
         }
         ];
 
@@ -101,8 +124,8 @@ describe('Api', () => {
             'CountryCode': data[1].country,
         }];
 
-        fetch.mockReturnValueOnce(Promise.resolve(new Response(JSON.stringify(expectedResult[0]))))
-            .mockReturnValueOnce(Promise.resolve(new Response(JSON.stringify(expectedResult[1]))));
+        fetch.mockReturnValueOnce(Promise.resolve(new Response(JSON.stringify(expectedResponse[0]))))
+            .mockReturnValueOnce(Promise.resolve(new Response(JSON.stringify(expectedResponse[1]))));
 
         const actual = await api.send(data);
 
@@ -117,6 +140,41 @@ describe('Api', () => {
             'body': expectedBody[1]
         });
 
+        expect(actual[1]).toEqual(expectedResult[1]);
         expect(actual).toEqual(expect.arrayContaining(expectedResult));
+    });
+
+    it('Normalizes the results', async () => {
+        const data = {
+            'status': 'VALID',
+            'formattedaddress': '123 E Main St, Anywhere, OH, 43210-1234',
+            'street': '123 E Main St',
+            'postalcode': '43210-1234',
+            'city': 'Anywhere',
+            'state': 'OH',
+            'country': 'US',
+            'rdi': 'Residential'
+        };
+        const result = Promise.resolve(data);
+
+        const input = {
+            'street': '',
+            'city': '',
+            'postalCode': ''
+        };
+
+        const expected = {
+            'status': data.status,
+            'original': input,
+            'corrected': {
+                'street': data.street,
+                'city': data.city,
+                'postalCode': data.postalcode
+            }
+        };
+
+        const actual = await api.normalize(input, result);
+
+        expect(actual).toStrictEqual(expected);
     });
 });

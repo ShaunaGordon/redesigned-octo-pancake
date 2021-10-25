@@ -34,6 +34,7 @@ const Api = {
             'method': 'POST',
             'body': input
         }).then((result) => {
+            // return Api.normalize(input, result.clone());
             return result.clone();
         }).catch((err) => {
             console.error(err);
@@ -50,9 +51,27 @@ const Api = {
     'send': async (data) => {
         let response = await Promise.all(data.map(item => Api.sendItem(item)));
 
-        let results = await Promise.all((response).map(result => result.json()));
+        return await Promise.all((response).map(async (result, index) => await Api.normalize(data[index], await result.json())));
+    },
 
-        return results;
+    /**
+     * Normalizes the return value to the internal standard so that we encapsulate the particulars of the API.
+     *
+     * @param {object} input
+     * @param {object} result
+     */
+    'normalize': async (input, result) => {
+        result = await result;
+
+        return {
+            'status': result.status,
+            'original': input,
+            'corrected': {
+                'street': result.street,
+                'city': result.city,
+                'postalCode': result.postalcode
+            }
+        };
     }
 };
 
