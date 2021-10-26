@@ -4,17 +4,16 @@ const stream = require('stream');
 
 let data;
 
-describe('Parser.parse', () => {
-    beforeAll(() => {
-        // Backticked strings preserve all whitespace, so this need outdented to be correct.
-        let input =
+let expectedInput =
 `Street Address, City, Postal Code
 123 e Maine Street, Columbus, 43215
 1 Empora St, Title, 11111
 `;
 
+describe('Parser.parse', () => {
+    beforeAll(() => {
         data = stream.Readable();
-        data.push(input);
+        data.push(expectedInput);
         data.push(null);
     });
 
@@ -77,13 +76,6 @@ describe('Parser.read', () => {
     });
 
     it('Reads the file data into the Stream', async () => {
-        // Backticked strings preserve all whitespace, so this need outdented to be correct.
-        let expected =
-`Street Address, City, Postal Code
-123 e Maine Street, Columbus, 43215
-1 Empora St, Title, 11111
-`;
-
         let filename = 'test/input.csv';
         let response = Parser.read(filename);
         let chunks = [];
@@ -95,6 +87,6 @@ describe('Parser.read', () => {
         const buffer = Buffer.concat(chunks);
         const actual = buffer.toString('utf-8');
 
-        expect(actual).toBe(expected);
+        expect(actual).toBe(expectedInput);
     });
 });
