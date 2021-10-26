@@ -72,7 +72,7 @@ const expectedNormalized = [{
     }
 }];
 
-describe('Api', () => {
+describe('Api.send', () => {
     afterEach(() => {
         fetch.mockReset();
     });
@@ -114,7 +114,9 @@ describe('Api', () => {
         expect(actual[1]).toEqual(expectedNormalized[1]);
         expect(actual).toEqual(expect.arrayContaining(expectedNormalized));
     });
+});
 
+describe('Api.normalize', () => {
     it('Normalizes the results', async () => {
         const result = Promise.resolve(expectedApiResult[0]);
 

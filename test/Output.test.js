@@ -2,6 +2,9 @@ const Output = require('Src/Output.js');
 
 const log = jest.spyOn(console, 'log').mockImplementation(() => {});
 
+/**
+ * Notes: In a more sophisticated application, we might set up more formal fixtures for this shared data. For now,
+ */
 const data = [{
     'status': 'INVALID',
     'original': {

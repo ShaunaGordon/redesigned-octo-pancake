@@ -11,6 +11,7 @@ const Parser = {
     'read': (file) => {
         return fs.createReadStream(file);
     },
+
     /**
      * Parse stream input into an object.
      *

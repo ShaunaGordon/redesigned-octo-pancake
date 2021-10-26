@@ -17,6 +17,7 @@ const Output = {
             console.log(formatted);
         });
     },
+
     /**
      * Format the "Invalid Address" messaging.
      *
