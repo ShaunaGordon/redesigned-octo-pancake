@@ -33,12 +33,25 @@ const Output = {
      * Format the "Valid Address, Correction" messaging.
      *
      * @param {object} data
+     * @returns String
      */
     'valid': (data) => {
         let original = Object.values(data.original).join(', ');
         let corrected = Object.values(data.corrected).join(', ');
 
         return `${original} ${connector} ${corrected}`;
+    },
+
+    /**
+     * Format the "Valid Address, Correction" messaging.
+     *
+     * For our purposes, "Suspect" and "Valid" are functionally the same, so we'll pass it through.
+     *
+     * @param {object} data
+     * @returns String
+     */
+    'suspect': (data) => {
+        return Output.valid(data);
     }
 };
 

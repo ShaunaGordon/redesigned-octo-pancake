@@ -2,6 +2,8 @@
  * Notes: In a larger application, this might get split into a folder and each API have its own file, with this becoming Api->AddressValidator or something. However, at this point, going that full way is overkill and violates YAGNI, though we can strike a reasonable balance, and do things like not hardcode the base URL in the code itself and encapsulate the service-specific things, allowing us the ability to drop in a delegation object, should the need arise.
  *
  * Additionally, address-validator.net has a bulk verification endpoint. Ideally, we'd use that instead, since it saves API calls, which is what we appear to be charged by. However, this requires a server to listen for the HTTP callbacks, which is out of scope for this right now.
+ *
+ * We also end up breaking a lot of the gains from Streams at this point, but they start getting really hairy when dealing with arrays of data, especially since we're not using the bulk verification. For simplicity's sake, we're opting to switch to synchronous at this point here, but in a more full application, we'd do what we can to preserve Streams for the aforementioned benefits.
  */
 
 const fetch = require('node-fetch');
@@ -19,7 +21,7 @@ const Api = {
      * @param {object} data
      * @returns
      */
-    'sendItem': (data) => {
+    'sendItem': async (data) => {
         let input = {
             'StreetAddress': data.street,
             'City': data.city,
@@ -32,9 +34,9 @@ const Api = {
 
         return fetch(endpoint, {
             'method': 'POST',
-            'body': input
+            'body': JSON.stringify(input),
+            'headers': {'Content-Type': 'application/json'}
         }).then((result) => {
-            // return Api.normalize(input, result.clone());
             return result.clone();
         }).catch((err) => {
             console.error(err);
@@ -51,7 +53,7 @@ const Api = {
     'send': async (data) => {
         let response = await Promise.all(data.map(item => Api.sendItem(item)));
 
-        return await Promise.all((response).map(async (result, index) => await Api.normalize(data[index], await result.json())));
+        return await Promise.all((response).map(async (result, index) => Api.normalize(data[index], result.json())));
     },
 
     /**

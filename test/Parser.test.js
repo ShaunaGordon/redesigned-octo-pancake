@@ -1,4 +1,4 @@
-const Parser = require('../src/Parser.js');
+const Parser = require('../src/Parser');
 const {Buffer} = require('buffer');
 const stream = require('stream');
 

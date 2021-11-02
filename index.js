@@ -8,8 +8,6 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const Parser = require('./src/Parser');
-const Api = require('./src/Api');
-const Output = require('./src/Output');
 
 /**
  * Use Commander.js to create the app's commands and triggers.
@@ -21,6 +19,7 @@ const Output = require('./src/Output');
  * Notes: While it's a bit overkill for features as defined, Commander really shines with more sophisticated command line applications. Adding commands and subcommands is extremely easy and easy to read. (If you want examples of this expanded out, feel free to ask.)
  */
 const program = require('commander');
+const App = require('./src/App');
 
 /**
   * Set the version information from package.json.
@@ -49,17 +48,7 @@ program
             data = Parser.read(file); // Stream
         }
 
-        Parser.parse(data)
-            .then((addresses) => {
-                Api.send(addresses)
-                    .then((results) => {
-                        console.log(results);
-                        for(let result in results) {
-                            let status = result.status.toLowerCase();
-                            Output[status](result);
-                        }
-                    });
-            });
+        App.run(data);
     });
 
 /**

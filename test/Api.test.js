@@ -1,4 +1,4 @@
-const api = require('Src/Api.js');
+const api = require('Src/Api');
 
 // Jest docs actually discuss node-fetch, specifically
 // https://jestjs.io/docs/bypassing-module-mocks
@@ -88,7 +88,8 @@ describe('Api.send', () => {
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenCalledWith('https://api.address-validator.net/api/verify?APIKey=undefined', {
             'method': 'POST',
-            'body': expectedBody[0]
+            'body': JSON.stringify(expectedBody[0]),
+            'headers': {'Content-Type': 'application/json'}
         });
 
         expect(actual).toEqual(expect.objectContaining(expectedApiResult[0]));
@@ -103,12 +104,14 @@ describe('Api.send', () => {
         expect(fetch).toHaveBeenCalledTimes(2);
         expect(fetch).toHaveBeenCalledWith('https://api.address-validator.net/api/verify?APIKey=undefined', {
             'method': 'POST',
-            'body': expectedBody[0]
+            'body': JSON.stringify(expectedBody[0]),
+            'headers': {'Content-Type': 'application/json'}
         });
 
         expect(fetch).toHaveBeenCalledWith('https://api.address-validator.net/api/verify?APIKey=undefined', {
             'method': 'POST',
-            'body': expectedBody[1]
+            'body': JSON.stringify(expectedBody[1]),
+            'headers': {'Content-Type': 'application/json'}
         });
 
         expect(actual[1]).toEqual(expectedNormalized[1]);
