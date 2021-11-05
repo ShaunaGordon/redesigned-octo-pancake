@@ -11,10 +11,19 @@ const Output = {
      * @param {array} data
      */
     'toTerminal': (data) => {
+        if(!Array.isArray(data)) {
+            data = [data];
+        }
         data.forEach((item) => {
-            let status = item.status.toLowerCase();
-            let formatted = Output[status](item);
-            console.log(formatted);
+            let formatted;
+            try {
+                let status = item.status.toLowerCase();
+                formatted = Output[status](item);
+            } catch(e) {
+                formatted = Output.error(item.status || e);
+            } finally {
+                console.log(formatted);
+            }
         });
     },
 
@@ -52,6 +61,16 @@ const Output = {
      */
     'suspect': (data) => {
         return Output.valid(data);
+    },
+
+    /**
+     * Anything else is an error, very likely from the API
+     *
+     * @param {object} data
+     * @returns String
+     */
+    'error': (message) => {
+        return `Error: ${message}`;
     }
 };
 

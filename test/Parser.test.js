@@ -62,6 +62,18 @@ describe('Parser.parse', () => {
                 expect(actual).toStrictEqual(expected);
             });
     });
+
+    it('Gracefully rejects non-csv files', () => {
+        let input = `
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus bibendum lacus a nisi rhoncus, vel sollicitudin dolor iaculis. Vivamus ut nibh hendrerit, iaculis nunc sed, ornare elit. Suspendisse in commodo sapien. Suspendisse gravida purus et nisi mollis pharetra. Nullam feugiat porta risus viverra tincidunt. Aenean quis nulla non odio imperdiet fringilla vitae et massa. Etiam tincidunt, turpis et vulputate vulputate, ante ante sodales ante, id ullamcorper ligula velit eu quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+
+        Donec facilisis ac dolor dignissim laoreet. Nulla gravida sagittis felis, quis interdum massa bibendum quis. Pellentesque vitae nunc eros. Nullam ut eleifend ligula. Aliquam finibus velit nisi, id cursus enim dictum id. Cras id metus sed mi feugiat commodo. Fusce tempor diam nec vestibulum eleifend. Quisque velit dolor, pellentesque non ante in, auctor dignissim elit. Donec vulputate justo mauris, a viverra eros faucibus sit amet. Mauris facilisis est ac tortor viverra, eu rhoncus est hendrerit. Mauris magna odio, tincidunt et felis nec, auctor vehicula magna. Vivamus eu finibus lectus. Vestibulum facilisis, lorem et scelerisque feugiat, eros quam pharetra arcu, nec sodales urna mi sed nulla. In iaculis hendrerit mollis. Fusce pellentesque nisl nulla, pellentesque pharetra dui eleifend non.`;
+        let invalid = stream.Readable();
+        invalid.push(input);
+        invalid.push(null);
+
+        return expect(Parser.parse(invalid)).rejects.toMatch('Input is not a valid CSV.');
+    });
 });
 
 describe('Parser.read', () => {

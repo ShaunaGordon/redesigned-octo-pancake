@@ -22,19 +22,17 @@ const Api = {
      * @returns
      */
     'sendItem': async (data) => {
-        let input = {
-            'StreetAddress': data.street,
-            'City': data.city,
-            'State': data.province,
-            'PostalCode': data.postalCode,
-            'CountryCode': data.country,
-        };
+        let input = [
+            'StreetAddress=' + encodeURIComponent(data.street),
+            'City=' + encodeURIComponent(data.city),
+            'PostalCode=' + encodeURIComponent(data.postalCode),
+            'CountryCode=' + (encodeURIComponent(data.country) || 'US'),
+        ];
 
-        let endpoint = `${baseUrl}${endpoints.verify}?APIKey=${apiKey}`;
+        let endpoint = `${baseUrl}${endpoints.verify}?APIKey=${apiKey}&${input.join('&')}`;
 
         return fetch(endpoint, {
-            'method': 'POST',
-            'body': JSON.stringify(input),
+            'method': 'GET',
             'headers': {'Content-Type': 'application/json'}
         }).then((result) => {
             return result.clone();

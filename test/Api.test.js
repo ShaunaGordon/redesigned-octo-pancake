@@ -1,4 +1,5 @@
 const api = require('Src/Api');
+const err = jest.spyOn(console, 'error').mockImplementation(() => {});
 
 // Jest docs actually discuss node-fetch, specifically
 // https://jestjs.io/docs/bypassing-module-mocks
@@ -72,6 +73,12 @@ const expectedNormalized = [{
     }
 }];
 
+const objToQueryString = (obj) => {
+    return Object.keys(obj)
+        .map(key => `${key}=${encodeURIComponent(obj[key])}`)
+        .join('&');
+};
+
 describe('Api.send', () => {
     afterEach(() => {
         fetch.mockReset();
@@ -86,9 +93,8 @@ describe('Api.send', () => {
         const actual = await (await api.sendItem(input[0])).json();
 
         expect(fetch).toHaveBeenCalledTimes(1);
-        expect(fetch).toHaveBeenCalledWith('https://api.address-validator.net/api/verify?APIKey=undefined', {
-            'method': 'POST',
-            'body': JSON.stringify(expectedBody[0]),
+        expect(fetch).toHaveBeenCalledWith(`https://api.address-validator.net/api/verify?APIKey=undefined&${objToQueryString(expectedBody[0])}`, {
+            'method': 'GET',
             'headers': {'Content-Type': 'application/json'}
         });
 
@@ -102,20 +108,26 @@ describe('Api.send', () => {
         const actual = await api.send(input);
 
         expect(fetch).toHaveBeenCalledTimes(2);
-        expect(fetch).toHaveBeenCalledWith('https://api.address-validator.net/api/verify?APIKey=undefined', {
-            'method': 'POST',
-            'body': JSON.stringify(expectedBody[0]),
+        expect(fetch).toHaveBeenCalledWith(`https://api.address-validator.net/api/verify?APIKey=undefined&${objToQueryString(expectedBody[0])}`, {
+            'method': 'GET',
             'headers': {'Content-Type': 'application/json'}
         });
 
-        expect(fetch).toHaveBeenCalledWith('https://api.address-validator.net/api/verify?APIKey=undefined', {
-            'method': 'POST',
-            'body': JSON.stringify(expectedBody[1]),
+        expect(fetch).toHaveBeenCalledWith(`https://api.address-validator.net/api/verify?APIKey=undefined&${objToQueryString(expectedBody[0])}`, {
+            'method': 'GET',
             'headers': {'Content-Type': 'application/json'}
         });
 
         expect(actual[1]).toEqual(expectedNormalized[1]);
         expect(actual).toEqual(expect.arrayContaining(expectedNormalized));
+    });
+
+    it('Gracefully handles a fetch failure', async () => {
+        fetch.mockRejectedValue(new Error('Invalid'));
+
+        await api.sendItem(input[0]);
+
+        expect(err).toHaveBeenCalled();
     });
 });
 

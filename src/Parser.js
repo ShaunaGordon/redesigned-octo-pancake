@@ -47,7 +47,7 @@ const Parser = {
                     records.push(record);
                 }
             })
-                .on('error', (err) => reject(err))
+                .on('error', () => reject('Input is not a valid CSV.'))
                 .on('end', () => resolve(records));
         });
     }
