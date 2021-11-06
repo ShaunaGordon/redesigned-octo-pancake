@@ -1,11 +1,31 @@
 /**
- * Notes: In a larger application, this might get split into a folder and each API have its own file, with this becoming Api->AddressValidator or something. However, at this point, going that full way is overkill and violates YAGNI, though we can strike a reasonable balance, and do things like not hardcode the base URL in the code itself and encapsulate the service-specific things, allowing us the ability to drop in a delegation object, should the need arise.
+ * Notes: In a larger application, this might get split into a folder and each
+ *  API have its own file, with this becoming Api->AddressValidator or
+ * something. However, at this point, going that full way is overkill and
+ * violates YAGNI, though we can strike a reasonable balance, and do things
+ * like not hardcode the base URL in the code itself and encapsulate the
+ * service-specific things, allowing us the ability to drop in a delegation
+ * object, should the need arise.
  *
- * Additionally, address-validator.net has a bulk verification endpoint. Ideally, we'd use that instead, since it saves API calls, which is what we appear to be charged by. However, this requires a server to listen for the HTTP callbacks, which is out of scope for this right now.
+ * Additionally, address-validator.net has a bulk verification endpoint.
+ * Ideally, we'd use that instead, since it saves API calls, which is what we
+ * appear to be charged by. However, this requires a server to listen for the
+ * HTTP callbacks, which is out of scope for this right now.
  *
- * Likewise, we'd also put in more safeguards against the API to handle the invalid key or rate limit exceeded errors. However, queueing and rate limiting take more than what is scoped for this. An invalid key can fail gracefully in the current state of the application with no harm, making the benefits of killing the script on first API Key error not greatly outweigh the costs of including it given the intended asynchronous nature of the application.
+ * Likewise, we'd also put in more safeguards against the API to handle the
+ * invalid key or rate limit exceeded errors. However, queueing and rate
+ * limiting take more than what is scoped for this. An invalid key can fail
+ * gracefully in the current state of the application with no harm, making the
+ * benefits of killing the script on first API Key error not greatly outweigh
+ * the costs of including it given the intended asynchronous nature of the
+ *  application.
  *
- * We also end up breaking a lot of the gains from Streams at this point, but they start getting really hairy when dealing with arrays of data, especially since we're not using the bulk verification. For simplicity's sake, we're opting to switch to synchronous at this point here, but in a more full application, we'd do what we can to preserve Streams for the aforementioned benefits.
+ * We also end up breaking a lot of the gains from Streams at this point, but
+ * they start getting really hairy when dealing with arrays of data, especially
+ * since we're not using the bulk verification. For simplicity's sake, we're
+ * opting to switch to synchronous at this point here, but in a more full
+ * application, we'd do what we can to preserve Streams for the aforementioned
+ * benefits.
  */
 
 const fetch = require('node-fetch');
@@ -46,7 +66,10 @@ const Api = {
     /**
      * Send data for a set of items to the API.
      *
-     * Notes: The rest of the application shouldn't really care about how this sends the data, just *that* it sends it. So, we'll standardize on using an array, so that if/when we have a bulk option, it can be handled internally.
+     * Notes: The rest of the application shouldn't really care about how this
+     * sends the data, just *that* it sends it. So, we'll standardize on using
+     * an array, so that if/when we have a bulk option, it can be handled
+     * internally.
      *
      * @param {array} data
      */
@@ -57,7 +80,8 @@ const Api = {
     },
 
     /**
-     * Normalizes the return value to the internal standard so that we encapsulate the particulars of the API.
+     * Normalizes the return value to the internal standard so that we
+     * encapsulate the particulars of the API.
      *
      * @param {object} input
      * @param {object} result

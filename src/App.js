@@ -1,5 +1,8 @@
 /**
- * Notes: If index.js is effectively our router, this is the controller. If there were more commands to be run, then they'd be in here (and, depending on needs, other similar files), too, where they'd oversee the different parts and knit all the tasks together.
+ * Notes: If index.js is effectively our router, this is the controller. If
+ * there were more commands to be run, then they'd be in here (and, depending
+ * on needs, other similar files), too, where they'd oversee the different
+ * parts and knit all the tasks together.
  */
 
 const Api = require('./Api');

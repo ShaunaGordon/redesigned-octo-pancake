@@ -15,9 +15,16 @@ const Parser = {
     /**
      * Parse stream input into an object.
      *
-     * Notes: In a larger system, we might alter the parsing to better chunk the data, so we don't negate the gains we get from Streams, but that's out of scope right now, so we'll do what we can to make this code clean and simple enough to be easily altered, or have a new parser dropped in to replace it entirely.
+     * Notes: In a larger system, we might alter the parsing to better chunk
+     * the data, so we don't negate the gains we get from Streams, but that's
+     * out of scope right now, so we'll do what we can to make this code clean
+     * and simple enough to be easily altered, or have a new parser dropped in
+     * to replace it entirely.
      *
-     * Columns are an optional parameter used to map CSV columns to a consistent internal structure, making the CSV parsing a bit more flexible in what it can take and not requiring absolute stringincy on column names.
+     * Columns are an optional parameter used to map CSV columns to a
+     * consistent internal structure, making the CSV parsing a bit more
+     * flexible in what it can take and not requiring absolute stringincy on
+     * column names.
      *
      * @param {Stream} input required
      * @param {array} columns

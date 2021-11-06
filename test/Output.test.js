@@ -3,7 +3,9 @@ const Output = require('Src/Output');
 const log = jest.spyOn(console, 'log').mockImplementation(() => {});
 
 /**
- * Notes: In a more sophisticated application, we might set up more formal fixtures for this shared data. For now, we'll just put them here, since there's not a lot.
+ * Notes: In a more sophisticated application, we might set up more formal
+ * fixtures for this shared data. For now, we'll just put them here, since
+ * there's not a lot.
  */
 const data = [{
     'status': 'INVALID',
@@ -94,8 +96,12 @@ describe('Output', () => {
     });
 
     it('Gracefully handles other messages', () => {
-        // Other possible response statuses: DELAYED, NO_COUNTRY, RATE_LIMIT_EXCEEDED, API_KEY_INVALID_OR_DEPLETED, RESTRICTED, INTERNAL_ERROR
-        // The exact messages at this point are moot, but are still relevant for the user
+        /* Other possible response statuses: DELAYED, NO_COUNTRY,
+        RATE_LIMIT_EXCEEDED, API_KEY_INVALID_OR_DEPLETED, RESTRICTED,
+        INTERNAL_ERROR
+
+        The exact messages at this point are moot, but are still relevant for the user.
+        */
 
         Output.toTerminal([data[3]]);
 
