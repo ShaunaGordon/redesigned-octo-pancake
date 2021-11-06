@@ -39,7 +39,7 @@ const Output = {
     },
 
     /**
-     * Format the "Valid Address, Correction" messaging.
+     * Format the "Valid Address" messaging.
      *
      * @param {object} data
      * @returns String

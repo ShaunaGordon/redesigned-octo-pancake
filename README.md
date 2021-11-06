@@ -17,5 +17,5 @@ Comments that are specifically because it's a code sample have the `Notes:` pref
 
 - `npm install` or `yarn install`
 - Running program: `node index.js file.csv` or `cat file.csv | node index.js`
-- Running standard tests: `jest`
+- Running tests: `jest`
 - Running full suite, with integration tests (hits API): `jest --all`
