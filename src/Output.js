@@ -11,6 +11,7 @@ const Output = {
      * @param {array} data
      */
     'toTerminal': (data) => {
+        // Notes: In a bigger system, we might want/need more robust handling of whether the date comes in as part of an array, but such measures are rather out of scope, so we're just doing a little adjustment to attempt to handle it gracefully. Ideally, the contents of this block don't get hit anyway, because of safeguards in the rest of the code.
         if(!Array.isArray(data)) {
             data = [data];
         }
@@ -20,6 +21,8 @@ const Output = {
                 let status = item.status.toLowerCase();
                 formatted = Output[status](item);
             } catch(e) {
+                // If we get an error at this point, it's typically a non-fatal error, so we can fail it gracefully as part of the output message and just continue on.
+                // Depending on needs, this can easily be switched to outputting to console.error instead of or in addition to the normal output.
                 formatted = Output.error(item.status || e);
             } finally {
                 console.log(formatted);
@@ -64,7 +67,7 @@ const Output = {
     },
 
     /**
-     * Anything else is an error, very likely from the API
+     * Anything else is an error, very likely from the API.
      *
      * @param {object} data
      * @returns String

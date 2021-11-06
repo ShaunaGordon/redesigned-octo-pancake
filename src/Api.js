@@ -3,6 +3,8 @@
  *
  * Additionally, address-validator.net has a bulk verification endpoint. Ideally, we'd use that instead, since it saves API calls, which is what we appear to be charged by. However, this requires a server to listen for the HTTP callbacks, which is out of scope for this right now.
  *
+ * Likewise, we'd also put in more safeguards against the API to handle the invalid key or rate limit exceeded errors. However, queueing and rate limiting take more than what is scoped for this. An invalid key can fail gracefully in the current state of the application with no harm, making the benefits of killing the script on first API Key error not greatly outweigh the costs of including it given the intended asynchronous nature of the application.
+ *
  * We also end up breaking a lot of the gains from Streams at this point, but they start getting really hairy when dealing with arrays of data, especially since we're not using the bulk verification. For simplicity's sake, we're opting to switch to synchronous at this point here, but in a more full application, we'd do what we can to preserve Streams for the aforementioned benefits.
  */
 
@@ -26,7 +28,7 @@ const Api = {
             'StreetAddress=' + encodeURIComponent(data.street),
             'City=' + encodeURIComponent(data.city),
             'PostalCode=' + encodeURIComponent(data.postalCode),
-            'CountryCode=' + (encodeURIComponent(data.country) || 'US'),
+            'CountryCode=' + encodeURIComponent(data.country || 'US'),
         ];
 
         let endpoint = `${baseUrl}${endpoints.verify}?APIKey=${apiKey}&${input.join('&')}`;
