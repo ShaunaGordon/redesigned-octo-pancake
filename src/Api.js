@@ -95,7 +95,8 @@ const Api = {
             'corrected': {
                 'street': result.street,
                 'city': result.city,
-                'postalCode': result.postalcode
+                'postalCode': result.postalcode,
+                'country': result.country
             }
         };
     }

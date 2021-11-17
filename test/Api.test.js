@@ -15,20 +15,21 @@ const input = [{
 {
     'street': '',
     'city': '',
-    'postalCode': ''
+    'postalCode': '',
+    'country': 'NZ'
 }];
 
 const expectedBody = [{
     'StreetAddress': input[0].street,
     'City': input[0].city,
     'PostalCode': input[0].postalCode,
-    'CountryCode': input[0].country,
+    'CountryCode': 'US',
 },
 {
     'StreetAddress': input[1].street,
     'City': input[1].city,
     'PostalCode': input[1].postalCode,
-    'CountryCode': input[1].country,
+    'CountryCode': 'NZ',
 }];
 
 const expectedApiResult = [
@@ -36,12 +37,14 @@ const expectedApiResult = [
         'status': 'VALID',
         'street': '123 E Main St',
         'city': 'Anywhere',
+        'country': 'US',
         'postalcode': '43210-1234',
     },
     {
         'status': 'VALID',
         'street': '345 E Main St',
         'city': 'Anywhere',
+        'country': 'NZ',
         'postalcode': '43210-1234',
     }
 ];
@@ -51,12 +54,14 @@ const expectedNormalized = [{
     'original': {
         'street': '',
         'city': '',
-        'postalCode': ''
+        'postalCode': '',
+        // Normalizing incoming data, so country won't be here, but will be in result
     },
     'corrected': {
         'street': expectedApiResult[0].street,
         'city': expectedApiResult[0].city,
         'postalCode': expectedApiResult[0].postalcode,
+        'country': expectedApiResult[0].country
     }
 },
 {
@@ -64,12 +69,14 @@ const expectedNormalized = [{
     'original': {
         'street': '',
         'city': '',
-        'postalCode': ''
+        'postalCode': '',
+        'country': 'NZ'
     },
     'corrected': {
         'street': expectedApiResult[1].street,
         'city': expectedApiResult[1].city,
         'postalCode': expectedApiResult[1].postalcode,
+        'country': expectedApiResult[1].country
     }
 }];
 
