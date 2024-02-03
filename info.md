@@ -1,6 +1,6 @@
 # Overview
 
-Thank you for considering a software engineering position at Empora.
+Thank you for considering a software engineering position at...
 
 ### Questions
 
